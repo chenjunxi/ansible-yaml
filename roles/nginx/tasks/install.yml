@@ -1,0 +1,12 @@
+- name: 拷贝nginx源文件
+  copy: src=/home/roles/nginx/files/nginx-1.14.2.tar.gz dest=/usr/local/src/
+
+- name: install 依赖环境
+  yum: name=gcc,gcc-c++,automake,pcre,pcre-devel,zlib,zlib-devel,openssl,openssl-devel state=latest
+
+
+- name: 解压源代码
+  shell: tar xf /usr/local/src/nginx-1.14.2.tar.gz -C /usr/local/src
+
+- name: 源码编译
+  shell: cd /usr/local/src/nginx-1.14.2 && ./configure  && make && make install && ln -sv  /usr/local/nginx/sbin/nginx /usr/sbin/

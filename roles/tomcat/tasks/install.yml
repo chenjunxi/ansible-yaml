@@ -1,0 +1,20 @@
+- name: Tomcat--拷贝所需文件
+  copy: src=files/apache-tomcat-8.0.32.tar.gz dest=/usr/local/src
+- name: Tomcat--拷贝所需文件
+  copy: src=files/jdk-8u191-linux-x64.rpm dest=/usr/local/src
+- name: Tomcat--拷贝所需文件
+  copy: src=files/tomcat dest=/etc/init.d
+
+- name: Tomcat--给脚本赋权限
+  shell: chmod +x /etc/init.d/tomcat
+
+- name: Tomcat--安装依赖环境
+  shell: java -version || rpm -ivh /usr/local/src/jdk-8u191-linux-x64.rpm
+
+- name: Tomcat--源码解压
+  shell: ls /usr/local/tomcat || tar xf /usr/local/src/apache-tomcat-8.0.32.tar.gz -C /usr/local/src
+
+- name: Tomcat--创建软链接
+  shell: ls /usr/local/tomcat || ln -s /usr/local/src/apache-tomcat-8.0.32 /usr/local/tomcat && chown -R tomcat.tomcat /usr/local/tomcat
+
+
