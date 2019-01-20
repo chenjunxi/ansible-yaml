@@ -1,0 +1,19 @@
+- hosts: test
+  remote_user: root
+  pre_tasks:
+       - name: config the yum repo for centos 7
+         yum_repository:
+                name: epel
+                description: epel
+                baseurl: http://mirrors.aliyun.com/epel/7/$basearch/
+                gpgcheck: no
+         when: ansible_distribution_major_version == "7"
+       - name: config the yum repo for centos 6
+         yum_repository:
+                name: epel
+                description: epel
+                baseurl: http://mirrors.aliyun.com/epel/6/$basearch/
+                gpgcheck: no
+         when: ansible_distribution_major_version == "6"
+  roles:
+        - haproxy

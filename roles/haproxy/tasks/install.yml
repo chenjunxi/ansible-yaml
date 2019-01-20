@@ -1,0 +1,27 @@
+- name: Haproxy--拷贝源文件
+  copy: src=haproxy-1.8.13.tar.gz dest=/usr/local/src/
+
+- name: Haproxy--拷贝service文件
+  copy: src=haproxy.service dest=/usr/lib/systemd/system/
+
+- name: Haproxy--依赖环境
+  yum: name=gcc,gcc-c++,glibc-devel,automake,pcre,pcre-devel,zlib,zlib-devel,openssl,openssl-devel,systemd-devel state=latest
+
+
+- name: Haproxy--解压源代码
+  shell: tar xf /usr/local/src/haproxy-1.8.13.tar.gz -C /usr/local/src creates=/usr/local/src/haproxy-1.8.13 
+
+
+- name: Haproxy--源码编译
+  shell: cd /usr/local/src/haproxy-1.8.13 &&  make  ARCH=x86_64 TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_SYSTEMD=1  USE_CPU_AFFINITY=1  PREFIX=/usr/local/haproxy && make install PREFIX=/usr/local/haproxy creates=/usr/local/haproxy
+
+- name: Haproxy--创建所需目录
+  file: name=/etc/haproxy/conf state=directory recurse=yes
+
+- name: Haproxy--拷贝命令到/usr/sbin
+  shell: cp /usr/local/haproxy/sbin/haproxy /usr/sbin creates=/usr/sbin/haproxy
+
+- name: Haproxy--拷贝配置文件
+  copy: src=haproxy.cfg dest=/etc/haproxy/
+
+
