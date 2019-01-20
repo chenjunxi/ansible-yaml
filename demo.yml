@@ -1,7 +1,0 @@
-#t yaml file
-- hosts: test
-  remote_user: root
-
-  tasks:
-        - name: del config file
-          shell: yum install -y  gcc gcc-c++ automake pcre pcre-devel zlib zlib-devel openssl openssl-devel
