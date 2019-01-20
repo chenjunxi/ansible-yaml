@@ -1,0 +1,6 @@
+- hosts: test
+  remote_user: root
+
+  tasks:
+        - name: 卸载mariadb
+          script: scripts/uninstall-mysql.sh
