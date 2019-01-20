@@ -1,0 +1,34 @@
+- name: Mariadb--拷贝二进制文件
+  copy: src=files/mariadb-10.2.15-linux-x86_64.tar.gz dest=/usr/local/src
+- name: Mariadb--拷贝配置文件
+  copy: src=files/my.cnf dest=/etc/
+
+- name: Mariadb--创建datadir
+  file: name=/data/mysql state=directory 
+
+- name: Mariadb--创建/var/lib/mysql
+  file: name=/var/lib/mysql state=directory owner=mysql group=mysql
+
+- name: Mariadb--二进制解压
+  shell: tar xf /usr/local/src/mariadb-10.2.15-linux-x86_64.tar.gz -C /usr/local/src creates=/usr/local/src/mariadb-10.2.15-linux-x86_64
+
+- name: Mariadb--软链接
+  shell: ln -s /usr/local/src/mariadb-10.2.15-linux-x86_64 /usr/local/mysql && chown -R mysql.mysql /usr/local/mysql/ creates=/usr/local/mysql 
+
+- name: Mariadb--安装
+  shell: /usr/local/mysql/scripts/mysql_install_db  --user=mysql --datadir=/data/mysql  --basedir=/usr/local/mysql creates=/data/mysql/mysql 
+ 
+- name: Mariadb--拷贝启动文件
+  shell: cp /usr/local/src/mariadb-10.2.15-linux-x86_64/support-files/mysql.server /etc/init.d/mysqld && chmod a+x /etc/init.d/mysqld && chkconfig --add mysqld creates=/etc/init.d/mysqld
+        
+- name: Mariadb--环境变量设置
+  shell: ln -sv /usr/local/mysql/bin/mysql  /usr/bin/mysql creates=/usr/bin/mysql
+
+- name: Mariadb--socket软链接
+  shell: ln -sv /data/mysql/mysql.sock  /var/lib/mysql/mysql.sock && ln -sv /var/lib/mysql/mysql.sock /tmp/mysql.sock creates=/var/lib/mysql/mysql.sock
+
+
+
+
+
+
